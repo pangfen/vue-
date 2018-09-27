@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="normalize.css">
+        <link rel="stylesheet" href="index.css">
+        <!-- 引入第三方动画库 -->
+        <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+        <style type="text/css">
+            .red{
+                width: 200px;
+                height: 200px;
+                background: red;
+                margin: 10px;
+            }
+            /*进入过渡的开始状态*/
+            .fade-enter{
+                transform: translateX(100px);
+                opacity: .3;
+                background: green;
+                width: 10px;
+                height: 10px;
+            }
+            /*进入过渡生效时的状态*/
+            .fade-enter-active {
+              transition: all 8s ease;
+              /*transition: all 8s cubic-bezier(1.0, 0.5, 0.8, 1.0);*/
+            }
+            /*进入过渡的结束状态*/
+            .fade-enter-to{
+                transform: translateX(10px);
+                opacity: .6;
+                background: yellow;
+                width: 100px;
+                height: 100px;
+            }
+            /*离开过渡的开始状态,下一帧被移除*/
+            .fade-leave{
+                opacity: 1;
+                background: black;
+                width: 400px;
+                height: 400px;
+            }
+            /*离开过渡生效时的状态*/
+            .fade-leave-active {
+              transition: all 10s ease;
+            }
+            /*离开过渡的结束状态*/
+            .fade-leave-to{
+                transform: translateX(100px);
+                opacity: .3;
+                background: green;
+                width: 10px;
+                height: 10px;
+            }
+          
+            @keyframes bounce-in {
+              0% {
+                transform: scale(0);
+              }
+              50% {
+                transform: scale(1.5);
+              }
+              100% {
+                transform: scale(1);
+              }
+            }
+
+            .bounce-enter-active {
+              animation: bounce-in 2s;
+            }
+            .bounce-leave-active {
+              animation: bounce-in 2s reverse;
+            }
+
+
+            .custom-enter {
+              opacity: 0;
+            }
+            .custom-enter-active {
+              transition: all 8s ease;
+            }
+            .custom-enter-to {
+              opacity: .9;
+            }
+            .nono{
+              transition: all 1s ease;
+            }
+
+
+            .TandA-enter {
+              opacity: 0;
+            }
+            .TandA-enter-active {
+              transition: opacity 7s ease;
+              animation: bounce-in 1s;
+            }
+            .TandA-enter-to {
+              opacity: .9;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div id="app" style="margin-bottom: 400px;">
+            <p>{{message}}</p>
+
+            <p>*6个class切换:v-enter,v-enter-active,v-enter-to,v-leave,v-leave-active,v-leave-to.</p>
+            <button @click="show = !show">
+                css过渡
+            </button>
+            <transition name="fade">
+                <div v-if="!show" class="red"></div>
+            </transition>
+
+
+            <p style="margin-top: 220px;">*.</p>
+            <button @click="showAni = !showAni">
+                css动画
+            </button>
+            <transition name="bounce">
+                <div v-if="!showAni" class="red"></div>
+            </transition>
+
+
+            <p style="margin-top: 220px;">*.自定义过渡的类名,优先级高于普通类名.
+            可以引入第三方样式库。</p>
+            <button @click="showClass = !showClass">
+                css
+            </button>
+            <!-- enter-active-class="animated tada" nono -->
+            <transition name='custom' enter-active-class="nono" :duration="20000" >
+                <div v-if="!showClass" class="red"></div>
+            </transition>
+
+
+            <p style="margin-top: 220px;">*.时使用过渡和动画。???</p>
+            <button @click="showBoth = !showBoth">
+                css
+            </button>
+            <transition name='TandA'>
+                <div v-if="!showBoth" class="red"></div>
+            </transition>
+
+
+            <p style="margin-top: 220px;">*.</p>
+            <button @click="show2 = !show2">
+                JavaScript 钩子
+            </button>
+            <transition
+                @before-enter="beforeEnter"
+                @enter="enter"
+                @leave="leave"
+                :css="false"
+            >
+                <p v-if="!show2">
+                  Demo
+                </p>
+            </transition>
+        </div>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js">
+         </script>
+        <script type="text/javascript">
+            var app = new Vue({ 
+                el: '#app',
+                data: {
+                    message: 'Vue 在插入、更新或者移除 DOM 时，提供多种不同方式的应用过渡效果。',
+                    show: true,
+                    showAni: true,
+                    showClass: true,
+                    showBoth: true,
+                    show1: true,
+                    show2: true,
+                },
+                methods: {
+                    beforeEnter: function (el) {
+                      el.style.opacity = 0
+                      el.style.transformOrigin = 'left'
+                    },
+                    enter: function (el, done) {
+                      Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+                       },
+                    leave: function (el, done) {
+                      Velocity(el, { translateX: '15px', rotateZ: '50deg',opacity:0 }, { duration: 600 })
+                    }
+                }
+               
+            });
+        </script>
+    </body>
+</html>
